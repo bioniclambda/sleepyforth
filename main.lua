@@ -78,6 +78,7 @@ function interpret(code)
 	local tokens = split(code, ' ')
 	local token
 	local word
+	local is_word
 
 	local itr = 1
 	
@@ -86,97 +87,98 @@ function interpret(code)
 		is_word = false
 		token = tokens[itr]
 
-		if (token == '+') then
-			push(pop() + pop())
+		for j in pairs(dict) do
+			word = dict[j]
 
-		elseif (token == '-') then
-			swap()
-			push(pop() - pop())
-
-		elseif (token == '*') then
-			push(pop() * pop())
-
-		elseif (token == '/') then
-			swap()
-			push(pop() / pop())
-
-		elseif (token == '.') then
-			io.write(pop())
-
-		elseif (token == 'drop') then
-			pop()
-
-		elseif (token == 'swap') then
-			swap()
-
-		elseif (token == 'dup') then
-			dup()
-
-		elseif (token == '<') then
-			swap()
-			if (pop() < pop()) then
-				push(1)
-			else
-				push(0)
+			if (token == word.name) then
+				interpret(word.value)
+				is_word = true
 			end
+		end
 
-		elseif (token == '>') then
-			swap()
-			if (pop() > pop()) then
-				push(1)
-			else
-				push(0)
-			end
+		if (not is_word) then
+			if (token == '+') then
+				push(pop() + pop())
 
-		elseif (token == 'if') then
-			if_count = 1
-			if (pop() == 0) then
-				while (tokens[itr] ~= 'end' and if_count > 0) do
-					if (tokens[itr] == 'if') then
-						if_count = if_count + 1
-					
-					elseif (tokens[itr] == 'end') then
-						if_count = id_count - 1
+			elseif (token == '-') then
+				swap()
+				push(pop() - pop())
+
+			elseif (token == '*') then
+				push(pop() * pop())
+
+			elseif (token == '/') then
+				swap()
+				push(pop() / pop())
+
+			elseif (token == '.') then
+				io.write(pop())
+
+			elseif (token == 'drop') then
+				pop()
+
+			elseif (token == 'swap') then
+				swap()
+
+			elseif (token == 'dup') then
+				dup()
+
+			elseif (token == '<') then
+				swap()
+				if (pop() < pop()) then
+					push(1)
+				else
+					push(0)
+				end
+
+			elseif (token == '>') then
+				swap()
+				if (pop() > pop()) then
+					push(1)
+				else
+					push(0)
+				end
+
+			elseif (token == 'if') then
+				if_count = 1
+				if (pop() == 0) then
+					while (tokens[itr] ~= 'end' and if_count > 0) do
+						if (tokens[itr] == 'if') then
+							if_count = if_count + 1
+						
+						elseif (tokens[itr] == 'end') then
+							if_count = id_count - 1
+						end
+						
+						itr = itr + 1 -- If pop is 0, then skip all tokens until end
 					end
-					
-					itr = itr + 1 -- If pop is 0, then skip all tokens until end
 				end
-			end
 
-		elseif (token == ':') then
-			local tempcode = '' -- temporary code
-			local temp_pos = 1
-			local word_name
-			
-			while (tokens[itr] ~= ';') do
-				if (tokens[itr] ~= ':') then
-					if (temp_pos == 1) then
-						name = tokens[itr]
-					else
-						tempcode = tempcode .. tokens[itr] .. ' '
+			elseif (token == ':') then
+				local tempcode = '' -- temporary code
+				local temp_pos = 1
+				local word_name
+				
+				while (tokens[itr] ~= ';') do
+					if (tokens[itr] ~= ':') then
+						if (temp_pos == 1) then
+							name = tokens[itr]
+						else
+							tempcode = tempcode .. tokens[itr] .. ' '
+						end
+
+						temp_pos = temp_pos + 1
 					end
 
-					temp_pos = temp_pos + 1
+					itr = itr + 1
 				end
 
-				itr = itr + 1
-			end
+				create_word(name, tempcode)
 
-			create_word(name, tempcode)	
+			elseif (token == 'emit') then
+				io.write(string.char((pop())))
 
-		else
-			local is_word
-			
-			for j in pairs(dict) do
-				word = dict[j]
-
-				if (token == word.name) then
-					interpret(word.value)
-					is_word = true
-				end
-			end
-
-			if (not is_word) then
+			else
 				push(tonumber(token))
 			end
 		end
