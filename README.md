@@ -22,6 +22,4 @@ Yes you can redefine words. <br/>
 
 Everything else is simple
 
-(No emit yet because I'm lazy)
-
 SleepyForth also has no strings or floating point numbers.
