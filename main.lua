@@ -9,6 +9,8 @@ function create_word(name, value)
 			dict[i].value = value
 			return
 		end
+
+		i = i + 1
 	end
 	
 	table.insert(dict, dictpos, {name = name, value = value})
