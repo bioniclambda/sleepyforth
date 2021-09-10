@@ -4,6 +4,7 @@ A sort of Forth written in Lua
 First off, I know how probably sloppy and unoptimized this is. <br/>
 I know I probably used a dumb way to do things. <br/>
 I just want to get this working <br/>
+(Still please contact me if you have a better method. If you have constructive criticism or tips or whatever, email me (or DM me on Discord).)
 
 Syntax example: <br/>
 
