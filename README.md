@@ -19,7 +19,7 @@ Yes you can redefine words. <br/>
 Everything else doesn't require much explanation
 
 Notes: <br/>
-SleepyForth also has no strings or floating point numbers. <br/>
+SleepyForth also has no strings. <br/>
 
 While "keywords" technically can't be redefined since they aren't words, something being a word is check before the Forth checks that it's a keyword.
 Which means that you can technically redefine keywords. <br/>
